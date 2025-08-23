@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <img src="img/GEO.png" alt="Logo" class="logo-center">
+  <h1>เข้าสู่ระบบ</h1>
+  <form action="#">
+    <input type="text" placeholder="ชื่อผู้ใช้"><br>
+    <input type="password" placeholder="รหัสผ่าน"><br>
+    <button type="submit">เข้าสู่ระบบ</button>
+  </form>
+  <a href="register.html">ยังไม่มีบัญชี? สมัครสมาชิก</a>
+</body>
+</html>
+
+<script>
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.querySelectorAll('input')[0].value;
+    const password = document.querySelectorAll('input')[1].value;
+
+    const userData = localStorage.getItem(username);
+    if (!userData) {
+      alert('ไม่พบบัญชีนี้');
+      return;
+    }
+
+    const user = JSON.parse(userData);
+    if (user.password === password) {
+      alert('เข้าสู่ระบบสำเร็จ');
+      window.location.href = 'map.html';
+    } else {
+      alert('รหัสผ่านไม่ถูกต้อง');
+    }
+  });
+</script>

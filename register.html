@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <img src="img/GEO.png" alt="Logo" class="logo-center">
+  <h1>สมัครสมาชิก</h1>
+  <form id="registerForm" action="#">
+    <input type="text" name="fullname" placeholder="ชื่อเต็ม"><br>
+    <input type="text" name="username" placeholder="ชื่อผู้ใช้"><br>
+    <input type="password" name="password" placeholder="รหัสผ่าน"><br>
+    <button type="submit">สมัครสมาชิก</button>
+  </form>
+  <a href="login.html">มีบัญชีแล้ว? เข้าสู่ระบบ</a>
+
+  <!-- ย้าย JavaScript มาตรงนี้ -->
+  <script>
+    document.querySelector('#registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const fullname = document.querySelector('input[name="fullname"]').value.trim();
+      const username = document.querySelector('input[name="username"]').value.trim();
+      const password = document.querySelector('input[name="password"]').value;
+
+      if (!fullname || !username || !password) {
+        alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+        return;
+      }
+
+      const user = { fullname, username, password };
+      localStorage.setItem(username, JSON.stringify(user));
+
+      alert('สมัครสมาชิกสำเร็จ');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

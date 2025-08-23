@@ -1,0 +1,33 @@
+body {
+    background-color: white;
+    color: black;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 20%;
+  }
+  
+  a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  input, button {
+    padding: 10px;
+    margin: 10px;
+    width: 250px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  .logo-center {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 400px; /* 👈 increased size */
+  }
+  
+  
