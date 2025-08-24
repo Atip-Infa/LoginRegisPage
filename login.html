@@ -31,7 +31,10 @@
     const user = JSON.parse(userData);
     if (user.password === password) {
       alert('เข้าสู่ระบบสำเร็จ');
-      window.location.href = 'map.html';
+      localStorage.setItem('loggedInUser', username); // ✅ เก็บ session
+
+      // 👇 เปลี่ยนตรงนี้เป็น URL ของหน้าหลัก Experience Builder
+      window.location.href = 'https://experience.arcgis.com/experience/xxxxxxxxxxxx'; 
     } else {
       alert('รหัสผ่านไม่ถูกต้อง');
     }
