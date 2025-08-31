@@ -1,42 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login to NGIS</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f5f5f5;
+    }
+    .login-box {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      text-align: center;
+      width: 300px;
+    }
+    button {
+      background: #007ac2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #005b90;
+    }
+  </style>
+  <!-- โหลด ArcGIS JS SDK -->
+  <script src="https://js.arcgis.com/4.30/"></script>
 </head>
 <body>
-  <img src="img/GEO.png" alt="Logo" class="logo-center">
-  <h1>เข้าสู่ระบบ</h1>
-  <form action="#">
-    <input type="text" placeholder="ชื่อผู้ใช้"><br>
-    <input type="password" placeholder="รหัสผ่าน"><br>
-    <button type="submit">เข้าสู่ระบบ</button>
-  </form>
-  <a href="register.html">ยังไม่มีบัญชี? สมัครสมาชิก</a>
+  <div class="login-box">
+    <h2>Login to NGIS</h2>
+    <p>กรุณาเข้าสู่ระบบด้วย ArcGIS Account</p>
+    <button id="loginBtn">Sign In</button>
+  </div>
+
+  <script type="module">
+    import OAuthInfo from "https://js.arcgis.com/4.30/esri/identity/OAuthInfo.js";
+    import IdentityManager from "https://js.arcgis.com/4.30/esri/identity/IdentityManager.js";
+
+    // ⚠️ ต้องไปเอา clientId ของคุณจาก ArcGIS Online/Enterprise OAuth App
+    const info = new OAuthInfo({
+      appId: "YOUR_CLIENT_ID_HERE",
+      portalUrl: "https://www.arcgis.com", // ถ้าเป็น NGIS Portal ใส่ URL ของ Portal แทน
+      popup: false
+    });
+
+    IdentityManager.registerOAuthInfos([info]);
+
+    async function doLogin() {
+      try {
+        // ขอ Credential จาก ArcGIS OAuth
+        const credential = await IdentityManager.getCredential(info.portalUrl + "/sharing");
+
+        console.log("Logged in as:", credential.userId);
+        console.log("Token:", credential.token);
+
+        // ✅ Redirect ไปยัง NGIS App พร้อม token
+        window.location.href = "https://your-ngis-app-url.com?token=" + credential.token;
+
+      } catch (err) {
+        alert("Login failed: " + err.message);
+        console.error(err);
+      }
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", doLogin);
+  </script>
 </body>
 </html>
-
-<script>
-  document.querySelector('form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const username = document.querySelectorAll('input')[0].value;
-    const password = document.querySelectorAll('input')[1].value;
-
-    const userData = localStorage.getItem(username);
-    if (!userData) {
-      alert('ไม่พบบัญชีนี้');
-      return;
-    }
-
-    const user = JSON.parse(userData);
-    if (user.password === password) {
-      alert('เข้าสู่ระบบสำเร็จ');
-      localStorage.setItem('loggedInUser', username); // ✅ เก็บ session
-
-      // 👇 เปลี่ยนตรงนี้เป็น URL ของหน้าหลัก Experience Builder
-      window.location.href = 'https://experience.arcgis.com/experience/xxxxxxxxxxxx'; 
-    } else {
-      alert('รหัสผ่านไม่ถูกต้อง');
-    }
-  });
-</script>
