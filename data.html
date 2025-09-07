@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Data Viewer</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin: 30px; }
+    table { border-collapse: collapse; width: 80%; margin: 20px auto; }
+    th, td { border: 1px solid #ccc; padding: 10px; }
+    th { background-color: #f2f2f2; }
+    button { padding: 10px 20px; margin: 20px; border: none; border-radius: 5px; background: black; color: white; cursor: pointer; }
+    button:hover { background: darkgray; }
+  </style>
+</head>
+<body>
+  <h1>📋 Registered Users</h1>
+  <table id="userTable">
+    <thead>
+      <tr>
+        <th>Fullname</th>
+        <th>Username</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button id="exportBtn">Download Excel (CSV)</button>
+
+  <script>
+    // Load users into table
+    const tbody = document.querySelector("#userTable tbody");
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key === "loggedInUser") continue; // skip session data
+      const user = JSON.parse(localStorage.getItem(key));
+
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${user.fullname}</td><td>${user.username}</td><td>${user.password}</td>`;
+      tbody.appendChild(row);
+    }
+
+    // Export to CSV
+    document.getElementById("exportBtn").addEventListener("click", function() {
+      let csv = "Fullname,Username,Password\n";
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key === "loggedInUser") continue;
+        const user = JSON.parse(localStorage.getItem(key));
+        csv += `${user.fullname},${user.username},${user.password}\n`;
+      }
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "users.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
